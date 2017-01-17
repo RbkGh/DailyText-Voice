@@ -1,24 +1,25 @@
 package com.swiftpot.dailytextvoice.fragments;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.res.Resources;
+import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
-import android.support.v4.content.WakefulBroadcastReceiver;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.swiftpot.dailytextvoice.R;
 import com.swiftpot.dailytextvoice.services.HotWordDetectorService;
-import com.swiftpot.dailytextvoice.services.TaskWakefulBroadcastReciever;
 
 import java.util.Locale;
 
@@ -59,9 +60,10 @@ public class HomeActivityFragment extends Fragment {
         btnStartService.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), HotWordDetectorService.class);
-                getActivity().startService(intent);
-                Log.i(getClass().getName(), "onClick of start service button : service started");
+//                Intent intent = new Intent(getActivity(), HotWordDetectorService.class);
+//                getActivity().startService(intent);
+                setStickyNotification();
+                Log.i(getClass().getName(), "Set Sticky notif!");
             }
         });
 
@@ -82,5 +84,28 @@ public class HomeActivityFragment extends Fragment {
             textToSpeech.shutdown();
         }
         super.onPause();
+    }
+
+    public void setOnclickForPlay(View v){
+        Toast.makeText(getContext(),"hello Daily Text Voice",Toast.LENGTH_LONG).show();
+    }
+    /*TODO set on click of notification buttons */
+    private void setStickyNotification() {
+        int notificationID = 2000;
+        // Using RemoteViews to bind custom layouts into Notification
+        RemoteViews remoteViews = new RemoteViews(getActivity().getPackageName(),
+                R.layout.notification_view);
+
+
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getContext());
+        mBuilder.setSmallIcon(R.drawable.ic_action_volume_up);
+        mBuilder.setContentTitle("DailyTextVoice");
+        mBuilder.setContentText("Todays text is at Proverbs 3:5");
+        mBuilder.setOngoing(true);
+        mBuilder.setContent(remoteViews);
+
+        NotificationManager mNotificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        // notificationID allows you to update the notification later on.
+        mNotificationManager.notify(notificationID, mBuilder.build());
     }
 }

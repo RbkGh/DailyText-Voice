@@ -61,4 +61,15 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <ImageButton
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="StartService"
+        android:id="@+id/btnStartService"
+        android:src="@android:drawable/btn_star_big_on"
+        android:layout_alignTop="@+id/fabReadAloud"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

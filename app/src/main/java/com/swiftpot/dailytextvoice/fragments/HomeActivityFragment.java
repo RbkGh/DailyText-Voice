@@ -1,6 +1,7 @@
 package com.swiftpot.dailytextvoice.fragments;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -18,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
+import com.swiftpot.dailytextvoice.NotificationActivityHandler;
 import com.swiftpot.dailytextvoice.R;
 import com.swiftpot.dailytextvoice.services.HotWordDetectorService;
 
@@ -96,6 +98,10 @@ public class HomeActivityFragment extends Fragment {
         RemoteViews remoteViews = new RemoteViews(getActivity().getPackageName(),
                 R.layout.notification_view);
 
+        Intent notifHandlder=new Intent(getActivity(), NotificationActivityHandler.class);
+        notifHandlder.putExtra("PLAY_DAILY_TEXT", "1");
+        PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 1, notifHandlder, 0);
+        remoteViews.setOnClickPendingIntent(R.id.btnPlay,pendingIntent);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getContext());
         mBuilder.setSmallIcon(R.drawable.ic_action_volume_up);

@@ -6,6 +6,8 @@ package com.swiftpot.dailytextvoice;/**
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
+import android.os.Handler;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
@@ -28,7 +30,6 @@ public class NotificationActivityHandler extends WakefulBroadcastReceiver {
     TextToSpeech textToSpeech;
     private static String DEFAULT_DATE_PATTERN_EXPECTED = "yyyy/MM/dd";
 
-
     @Override
     public void onReceive(final Context context, Intent intent) {
         Log.i("LOG", "Here now,yet to process number");
@@ -36,12 +37,15 @@ public class NotificationActivityHandler extends WakefulBroadcastReceiver {
         Log.i("LOG", "launching action: " + action);
         assert action != null;
         if (action.equals("1")) {
-            String acknowledgedMessage = "Hello Rod,a moment please,I'm getting today's text online..";
+            String acknowledgedMessage = "Hello ,a moment please,I'm getting today's text online..";
             Toast.makeText(context, acknowledgedMessage, Toast.LENGTH_SHORT).show();
-            talk(acknowledgedMessage,context);
+
+            talk(acknowledgedMessage, context);
+
             //use asynctask inline,not suitable for production
-            new AsyncTask<Void, Void, DailyTextEntity>(){
+            new AsyncTask<Void, Void, DailyTextEntity>() {
                 DailyTextEntity dailyTextEntity;
+
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
@@ -53,9 +57,7 @@ public class NotificationActivityHandler extends WakefulBroadcastReceiver {
                     String startingSpeech = "Today's text : ";
                     String theme = dailyTextEntity.getDailyTextTheme();
                     String body = dailyTextEntity.getDailyTextMsgBody();
-                    talk(startingSpeech,context);
-                    talk(theme,context);
-                    talk(body,context);
+                    talk(startingSpeech + theme + body, context);
                 }
 
                 @Override
@@ -64,7 +66,7 @@ public class NotificationActivityHandler extends WakefulBroadcastReceiver {
                     Date date = new Date();
                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DEFAULT_DATE_PATTERN_EXPECTED);
                     String dateInExpectedFormat = simpleDateFormat.format(date);
-                    Log.d("LOG", "dateInExpectedFormat: "+dateInExpectedFormat);
+                    Log.d("LOG", "dateInExpectedFormat: " + dateInExpectedFormat);
                     try {
                         dailyTextEntity = dailyTextCrawler.crawlForDailyText(dateInExpectedFormat);
 
@@ -78,24 +80,39 @@ public class NotificationActivityHandler extends WakefulBroadcastReceiver {
             }.execute();
 
 
-        }else{
+        } else {
             Toast.makeText(context, "Nothing", Toast.LENGTH_SHORT).show();
         }
+        //completeWakefulIntent(intent);
     }
 
 
-
-    void talk(final String speech,Context context) {
+    void talk(final String speech, Context context) {
         textToSpeech = new TextToSpeech(context.getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
-            public void onInit(int i) {
-                if (i != TextToSpeech.ERROR) {
-                    textToSpeech.setLanguage(Locale.US);
-                    textToSpeech.speak(speech,TextToSpeech.QUEUE_ADD,null);
+            public void onInit(int status) {
+                textToSpeech.setLanguage(Locale.US);
+                if (status != TextToSpeech.ERROR) {
+                    speak(speech);
                 }
             }
         });
     }
+
+
+    /**
+     * ensure deprecation in lollipop still runs
+     *
+     * @param text
+     */
+    private void speak(String text) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            textToSpeech.speak(text, TextToSpeech.QUEUE_ADD, null, null);
+        } else {
+            textToSpeech.speak(text, TextToSpeech.QUEUE_ADD, null);
+        }
+    }
+}
 
 
 //    @Override
@@ -106,4 +123,4 @@ public class NotificationActivityHandler extends WakefulBroadcastReceiver {
 //        }
 //        super.onDestroy();
 //    }
-}
+

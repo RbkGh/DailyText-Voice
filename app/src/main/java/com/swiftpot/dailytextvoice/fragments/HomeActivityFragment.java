@@ -53,11 +53,15 @@ public class HomeActivityFragment extends Fragment {
                 R.layout.notification_view);
 
         Intent notifHandlder=new Intent(getActivity(), NotificationActivityHandler.class);
-
         notifHandlder.putExtra("PLAY_DAILY_TEXT", "1");
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 1, notifHandlder, 0);
-
         remoteViews.setOnClickPendingIntent(R.id.btnPlay,pendingIntent);
+
+        Intent notifStopHandlder=new Intent(getActivity(), NotificationActivityHandler.class);
+        notifStopHandlder.putExtra("PLAY_DAILY_TEXT", "2");
+        PendingIntent pendingCloseIntent = PendingIntent.getBroadcast(getContext(), 2, notifStopHandlder, 0);
+        remoteViews.setOnClickPendingIntent(R.id.btnStop,pendingCloseIntent);
+
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getContext());
         mBuilder.setSmallIcon(R.drawable.ic_action_volume_up);

@@ -80,8 +80,8 @@ public class NotificationActivityHandler extends WakefulBroadcastReceiver {
             }.execute();
 
 
-        } else {
-            Toast.makeText(context, "Nothing", Toast.LENGTH_SHORT).show();
+        } if (action.equals("2")){
+                stopTalking(context);
         }
         //completeWakefulIntent(intent);
     }
@@ -100,6 +100,14 @@ public class NotificationActivityHandler extends WakefulBroadcastReceiver {
         });
     }
 
+    void stopTalking(Context context) {
+        if (textToSpeech.isSpeaking()) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }else{
+            Toast.makeText(context,"Not reading daily text currently",Toast.LENGTH_SHORT).show();
+        }
+    }
 
     /**
      * ensure deprecation in lollipop still runs

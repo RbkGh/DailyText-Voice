@@ -32,15 +32,12 @@ public class NotificationActivityHandler extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         String action = (String) getIntent().getExtras().get("PLAY_DAILY_TEXT");
-        Log.i("LOG", "lauching action: " + action);
+        Log.i("LOG", "launching action: " + action);
         assert action != null;
         if (action.equals("1")) {
             String acknowledgedMessage = "Hello Rod,a moment please,I'm getting today's text online..";
             Toast.makeText(getApplicationContext(), acknowledgedMessage, Toast.LENGTH_SHORT).show();
             talk(acknowledgedMessage);
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
                     //use asynctask inline,not suitable for production
                     new AsyncTask<Void, Void, DailyTextEntity>(){
                         DailyTextEntity dailyTextEntity;
@@ -66,7 +63,7 @@ public class NotificationActivityHandler extends AppCompatActivity {
                             Date date = new Date();
                             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DEFAULT_DATE_PATTERN_EXPECTED);
                             String dateInExpectedFormat = simpleDateFormat.format(date);
-
+                            Log.d("", "dateInExpectedFormat: "+dateInExpectedFormat);
                             try {
                                 dailyTextEntity = dailyTextCrawler.crawlForDailyText(dateInExpectedFormat);
 
@@ -75,12 +72,10 @@ public class NotificationActivityHandler extends AppCompatActivity {
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
-                            return null;
+                            return dailyTextEntity;
                         }
                     }.execute();
 
-                }
-            }).run();
 
         }
     }

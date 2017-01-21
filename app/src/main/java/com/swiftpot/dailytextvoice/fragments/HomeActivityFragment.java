@@ -54,7 +54,7 @@ public class HomeActivityFragment extends Fragment {
             @Override
             public void onInit(int status) {
                 if(status != TextToSpeech.ERROR) {
-                    textToSpeech.setLanguage(Locale.UK);
+                    textToSpeech.setLanguage(Locale.US);
                 }
             }
         });
@@ -80,12 +80,12 @@ public class HomeActivityFragment extends Fragment {
     }
 
     @Override
-    public void onPause() {
+    public void onDestroy() {
         if(textToSpeech !=null){
             textToSpeech.stop();
             textToSpeech.shutdown();
         }
-        super.onPause();
+        super.onDestroy();
     }
 
     public void setOnclickForPlay(View v){

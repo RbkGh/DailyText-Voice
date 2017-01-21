@@ -83,13 +83,14 @@ public class NotificationActivityHandler extends AppCompatActivity {
     }
 
 
+
     void talk(final String speech) {
         textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int i) {
                 if (i != TextToSpeech.ERROR) {
                     textToSpeech.setLanguage(Locale.US);
-                    textToSpeech.speak(speech,TextToSpeech.QUEUE_FLUSH,null);
+                    textToSpeech.speak(speech,TextToSpeech.QUEUE_ADD,null);
                 }
             }
         });

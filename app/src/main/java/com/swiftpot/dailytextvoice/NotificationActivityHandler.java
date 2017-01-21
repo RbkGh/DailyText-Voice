@@ -3,6 +3,7 @@ package com.swiftpot.dailytextvoice;/**
  * 11:30 PM
  */
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
@@ -40,23 +41,44 @@ public class NotificationActivityHandler extends AppCompatActivity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    DailyTextCrawler dailyTextCrawler = new DailyTextCrawler();
-                    Date date = new Date();
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DEFAULT_DATE_PATTERN_EXPECTED);
-                    String dateInExpectedFormat = simpleDateFormat.format(date);
-                    try {
-                        DailyTextEntity dailyTextEntity = dailyTextCrawler.crawlForDailyText(dateInExpectedFormat);
-                        String startingSpeech = "Today's text : ";
-                        String theme = dailyTextEntity.getDailyTextTheme();
-                        String body = dailyTextEntity.getDailyTextMsgBody();
-                        talk(startingSpeech);
-                        talk(theme);
-                        talk(body);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
+                    //use asynctask inline,not suitable for production
+                    new AsyncTask<Void, Void, DailyTextEntity>(){
+                        DailyTextEntity dailyTextEntity;
+                        @Override
+                        protected void onPreExecute() {
+                            super.onPreExecute();
+                        }
+
+                        @Override
+                        protected void onPostExecute(DailyTextEntity dailyTextEntity) {
+                            super.onPostExecute(dailyTextEntity);
+                            String startingSpeech = "Today's text : ";
+                            String theme = dailyTextEntity.getDailyTextTheme();
+                            String body = dailyTextEntity.getDailyTextMsgBody();
+                            talk(startingSpeech);
+                            talk(theme);
+                            talk(body);
+                        }
+
+                        @Override
+                        protected DailyTextEntity doInBackground(Void... voids) {
+                            DailyTextCrawler dailyTextCrawler = new DailyTextCrawler();
+                            Date date = new Date();
+                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DEFAULT_DATE_PATTERN_EXPECTED);
+                            String dateInExpectedFormat = simpleDateFormat.format(date);
+
+                            try {
+                                dailyTextEntity = dailyTextCrawler.crawlForDailyText(dateInExpectedFormat);
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            return null;
+                        }
+                    }.execute();
+
                 }
             }).run();
 

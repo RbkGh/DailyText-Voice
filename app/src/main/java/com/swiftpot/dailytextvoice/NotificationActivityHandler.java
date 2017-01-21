@@ -9,6 +9,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.swiftpot.dailytext.crawler.DailyTextCrawler;
+import com.swiftpot.dailytext.crawler.models.DailyTextEntity;
+
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -17,7 +24,7 @@ import java.util.Locale;
  */
 public class NotificationActivityHandler extends AppCompatActivity {
     TextToSpeech textToSpeech;
-
+    private static String DEFAULT_DATE_PATTERN_EXPECTED = "yyyy/MM/dd";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +37,28 @@ public class NotificationActivityHandler extends AppCompatActivity {
             String acknowledgedMessage = "Hello Rod,a moment please,I'm getting today's text online..";
             Toast.makeText(getApplicationContext(), acknowledgedMessage, Toast.LENGTH_SHORT).show();
             talk(acknowledgedMessage);
-            Log.d("Speaking", "Speaking");
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    DailyTextCrawler dailyTextCrawler = new DailyTextCrawler();
+                    Date date = new Date();
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DEFAULT_DATE_PATTERN_EXPECTED);
+                    String dateInExpectedFormat = simpleDateFormat.format(date);
+                    try {
+                        DailyTextEntity dailyTextEntity = dailyTextCrawler.crawlForDailyText(dateInExpectedFormat);
+                        String startingSpeech = "Today's text : ";
+                        String theme = dailyTextEntity.getDailyTextTheme();
+                        String body = dailyTextEntity.getDailyTextMsgBody();
+                        talk(startingSpeech);
+                        talk(theme);
+                        talk(body);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).run();
 
         }
     }

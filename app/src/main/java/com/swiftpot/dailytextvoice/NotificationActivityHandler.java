@@ -40,7 +40,7 @@ public class NotificationActivityHandler extends WakefulBroadcastReceiver {
             String acknowledgedMessage = "Hello ,a moment please,I'm getting today's text online..";
             Toast.makeText(context, acknowledgedMessage, Toast.LENGTH_SHORT).show();
 
-            talk(acknowledgedMessage, context);
+            //talk(acknowledgedMessage, context);
 
             //use asynctask inline,not suitable for production
             new AsyncTask<Void, Void, DailyTextEntity>() {
@@ -95,6 +95,7 @@ public class NotificationActivityHandler extends WakefulBroadcastReceiver {
                 if (status != TextToSpeech.ERROR) {
                     speak(speech);
                 }
+
             }
         });
     }

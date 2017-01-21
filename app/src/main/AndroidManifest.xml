@@ -32,7 +32,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".NotificationActivityHandler"></activity>
+        <receiver android:name=".NotificationActivityHandler" android:enabled="true"></receiver>
     </application>
 
 </manifest>

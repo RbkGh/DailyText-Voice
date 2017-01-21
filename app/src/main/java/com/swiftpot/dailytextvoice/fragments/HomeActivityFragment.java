@@ -99,8 +99,10 @@ public class HomeActivityFragment extends Fragment {
                 R.layout.notification_view);
 
         Intent notifHandlder=new Intent(getActivity(), NotificationActivityHandler.class);
+
         notifHandlder.putExtra("PLAY_DAILY_TEXT", "1");
         PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 1, notifHandlder, 0);
+
         remoteViews.setOnClickPendingIntent(R.id.btnPlay,pendingIntent);
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getContext());

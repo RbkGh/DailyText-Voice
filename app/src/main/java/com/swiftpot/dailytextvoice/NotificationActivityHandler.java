@@ -30,7 +30,7 @@ public class NotificationActivityHandler extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.i("LOG", "Here now,yet to process number");
         String action = (String) getIntent().getExtras().get("PLAY_DAILY_TEXT");
         Log.i("LOG", "launching action: " + action);
         assert action != null;
@@ -63,7 +63,7 @@ public class NotificationActivityHandler extends AppCompatActivity {
                             Date date = new Date();
                             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DEFAULT_DATE_PATTERN_EXPECTED);
                             String dateInExpectedFormat = simpleDateFormat.format(date);
-                            Log.d("", "dateInExpectedFormat: "+dateInExpectedFormat);
+                            Log.d("LOG", "dateInExpectedFormat: "+dateInExpectedFormat);
                             try {
                                 dailyTextEntity = dailyTextCrawler.crawlForDailyText(dateInExpectedFormat);
 
@@ -77,6 +77,8 @@ public class NotificationActivityHandler extends AppCompatActivity {
                     }.execute();
 
 
+        }else{
+            Toast.makeText(getApplicationContext(), "Nothing", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -86,6 +88,7 @@ public class NotificationActivityHandler extends AppCompatActivity {
             @Override
             public void onInit(int i) {
                 if (i != TextToSpeech.ERROR) {
+                    textToSpeech.setLanguage(Locale.US);
                     textToSpeech.speak(speech,TextToSpeech.QUEUE_FLUSH,null);
                 }
             }

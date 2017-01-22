@@ -80,8 +80,10 @@ public class NotificationActivityHandler extends WakefulBroadcastReceiver {
             }.execute();
 
 
-        } if (action.equals("2")){
+        } else if (action.equals("2")){
                 stopTalking(context);
+        }else{
+            //start the main intent if required
         }
         //completeWakefulIntent(intent);
     }

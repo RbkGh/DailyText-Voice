@@ -93,6 +93,7 @@ public class NotificationActivityHandler extends WakefulBroadcastReceiver {
         textToSpeech = new TextToSpeech(context.getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
+                textToSpeech.setSpeechRate((float) 0.8);
                 textToSpeech.setLanguage(Locale.US);
                 if (status != TextToSpeech.ERROR) {
                     speak(speech);

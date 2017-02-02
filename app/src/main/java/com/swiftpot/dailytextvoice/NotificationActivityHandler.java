@@ -27,7 +27,7 @@ import java.util.Locale;
  * 11:30 PM
  */
 public class NotificationActivityHandler extends WakefulBroadcastReceiver {
-    TextToSpeech textToSpeech;
+    TextToSpeech textToSpeech = null;
     private static String DEFAULT_DATE_PATTERN_EXPECTED = "yyyy/MM/dd";
 
     @Override
@@ -80,35 +80,41 @@ public class NotificationActivityHandler extends WakefulBroadcastReceiver {
             }.execute();
 
 
-        } else if (action.equals("2")){
-                stopTalking(context);
-        }else{
-            //start the main intent if required
+        } else if (action.equals("2")) {
+            stopTalking(context);
+        } else {
+            //start athe main intent if required
         }
-        //completeWakefulIntent(intent);
+        completeWakefulIntent(intent);
     }
 
 
     void talk(final String speech, Context context) {
-        textToSpeech = new TextToSpeech(context.getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                textToSpeech.setSpeechRate((float) 0.8);
-                textToSpeech.setLanguage(Locale.US);
-                if (status != TextToSpeech.ERROR) {
-                    speak(speech);
-                }
+        if (getTextToSpeech() != null) {
+            speak(speech);
+        } else {
+            textToSpeech = new TextToSpeech(context.getApplicationContext(), new TextToSpeech.OnInitListener() {
+                @Override
+                public void onInit(int status) {
+                    textToSpeech.setSpeechRate((float) 0.8);
+                    textToSpeech.setLanguage(Locale.US);
+                    if (status != TextToSpeech.ERROR) {
+                        speak(speech);
+                    }
 
-            }
-        });
+                }
+            });
+            setTextToSpeech(textToSpeech);
+        }
+
     }
 
     void stopTalking(Context context) {
-        if (textToSpeech.isSpeaking()) {
+        if (textToSpeech != null) {
             textToSpeech.stop();
             textToSpeech.shutdown();
-        }else{
-            Toast.makeText(context,"Not reading daily text currently",Toast.LENGTH_SHORT).show();
+        } else {
+            textToSpeech.shutdown();
         }
     }
 
@@ -119,20 +125,17 @@ public class NotificationActivityHandler extends WakefulBroadcastReceiver {
      */
     private void speak(String text) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            textToSpeech.speak(text, TextToSpeech.QUEUE_ADD, null, null);
+            textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
         } else {
-            textToSpeech.speak(text, TextToSpeech.QUEUE_ADD, null);
+            textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
         }
     }
+
+    public TextToSpeech getTextToSpeech() {
+        return textToSpeech;
+    }
+
+    public void setTextToSpeech(TextToSpeech textToSpeech) {
+        this.textToSpeech = textToSpeech;
+    }
 }
-
-
-//    @Override
-//    public void onDestroy() {
-//        if (textToSpeech != null) {
-//            textToSpeech.stop();
-//            textToSpeech.shutdown();
-//        }
-//        super.onDestroy();
-//    }
-

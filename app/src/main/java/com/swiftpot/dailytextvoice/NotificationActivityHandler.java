@@ -54,10 +54,14 @@ public class NotificationActivityHandler extends WakefulBroadcastReceiver {
                 @Override
                 protected void onPostExecute(DailyTextEntity dailyTextEntity) {
                     super.onPostExecute(dailyTextEntity);
-                    String startingSpeech = "Today's text : ";
-                    String theme = dailyTextEntity.getDailyTextTheme();
-                    String body = dailyTextEntity.getDailyTextMsgBody();
-                    talk(startingSpeech + theme + body, context);
+                    if (dailyTextEntity == null) {
+                        talk("Please ensure you have internet and try again.", context);
+                    } else {
+                        String startingSpeech = "Today's text : ";
+                        String theme = dailyTextEntity.getDailyTextTheme();
+                        String body = dailyTextEntity.getDailyTextMsgBody();
+                        talk(startingSpeech + theme + body, context);
+                    }
                 }
 
                 @Override

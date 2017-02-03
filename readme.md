@@ -1,6 +1,6 @@
 #DailyTextVoice Android Mobile App
 
-#    Welcome to the DailyText-Voice wiki!#
+#    Welcome to the DailyText-Voice#
 ***
 
 __DailyText-Voice app simply crawls the jw.org website for daily text string and reads out the daily text using android's tts.__
@@ -16,12 +16,9 @@ __DailyText-Voice app simply crawls the jw.org website for daily text string and
 
 _Below is some screenshots as at February 3rd,2017_
 ***
-https://github.com/RbkGh/FormHelper/raw/master/descriptionalImages/droidformHelperGIF.gif
 ![Home](https://github.com/RbkGh/DailyText-Voice/raw/master/descriptivedata/DailyText-VoiceHome.png)
 
 ![NotificationMenu](https://github.com/RbkGh/DailyText-Voice/raw/master/descriptivedata/DailyTextVoiceNotificationMenu.png)
 
 ![AppReadingNotificationToast](https://github.com/RbkGh/DailyText-Voice/raw/master/descriptivedata/DailyTextVoiceSpeaking.png)
 ***
-
-
